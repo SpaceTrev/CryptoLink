@@ -18,7 +18,7 @@ $.ajax({
   })
  .then(function(response) {
      var coinPrice = response[0].price_usd;
-     $("#coinPrice").append("Coin Price In USD = " + coinPrice);
+     $("#coinPrice").append("Price of " + coinName + " in USD: " + coinPrice);
      console.log(response);
     // console.log(response[0].price_usd);
     // $("#coinPrice").html("Bitcoin Price In USD: " + response[0].price_usd)
