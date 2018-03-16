@@ -17,8 +17,10 @@ function displayCoin() {
         method: "GET"
     })
         .then(function (response) {
+            var coinRank = response[0].rank;
+            var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            $("#coinPrice").append("Price of " + coinName + " in USD: " + coinPrice + "<br>");
+            $("#coinPrice").append("Rank # " + coinRank + " Price of " + coinName + " in USD: " + coinPrice + " Market Cap: " + marketCap + "<br>");
             console.log(response);
         });
 }
