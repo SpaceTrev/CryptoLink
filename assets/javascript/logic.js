@@ -26,7 +26,11 @@ $("#addCoin").on("click", function (event) {
     event.preventDefault();
     var coinName = $("#coinInput").val().trim();
     coinButtonArray.push(coinName);
-    createButtons();
+    var buttonArr = $("<button class='btn btn-info'>");
+    buttonArr.addClass("coinButtons");
+    buttonArr.attr("data-name", coinName);
+    buttonArr.text(coinName);
+    $("#coinButtonView").append(buttonArr);
 });
 $(document).on("click", ".coinButtons", displayCoin);
 createButtons();
