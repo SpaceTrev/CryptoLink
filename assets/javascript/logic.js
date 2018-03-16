@@ -1,4 +1,4 @@
-var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar"];
+var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 function createButtons() {
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
