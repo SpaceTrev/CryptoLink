@@ -1,0 +1,83 @@
+<html>
+<header>
+    <title>This is title</title>
+</header>
+
+<style>
+    .crypto {
+        width: 30px;
+        height: 30px;
+        border-style: solid;
+        padding: 2px;
+        float: left;
+        margin: 2px;
+    }
+
+    .crypto-button-color {
+        color: slategray;
+    }
+
+    .request-color {
+        color: rgb(97, 167, 214);
+    }
+</style>
+
+<body>
+
+        <div class="container">
+
+                <div class="row">
+        
+                    <div class="col-lg-6">
+                        <br>
+                        <div class="card">
+                            <p class="card-header">list</p>
+                            <div id="buttons"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                            <br>
+                            <div class="card">
+                                <p class="card-header">requested</p>
+                                <div id="display"></div>
+                            </div>
+                        </div>
+
+</body>
+<script src="https://rawgit.com/mzabriskie/axios/master/dist/axios.min.js"></script>
+<script src="https://rawgit.com/coinapi/coinapi-sdk/master/javascript-rest/coinapi_v1.js"></script>
+<script src="https://rawgit.com/coinapi/coinapi-sdk/master/javascript-rest/example_javascript.js"></script>
+
+</html>
+
+<script>
+    $(document).ready(function () {
+
+        var currencies = metadata_list_assets().name();
+
+        for (var i = 0; i < currencies.length; i++) {
+            console.log(currencies[i]);
+
+            var cryptoBtn = $("<button>").addClass("crypto-button crypto crypto-button-color")
+                .attr("data-crypto", currencies[i])
+                .text(currencies[i])
+                .appendTo("#buttons");
+
+        };
+
+        $(".crypto-button").on("click", function () {
+            var cryptoToDisplay = $("<div>")
+
+            cryptoToDisplay.addClass("crypto request-color");
+            cryptoToDisplay.text($(this).attr("data-crypto"));
+            $("#display").append(cryptoToDisplay);
+
+        });
+
+        $("#clear").on("click", function () {
+            $("#display").empty();
+        });
+
+    });
+</script>>

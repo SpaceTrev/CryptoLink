@@ -1,4 +1,3 @@
-
 var config = {
   apiKey: "AIzaSyD4WpXJE_OjEOIdB9pHDMGofStkUiENuGk",
   authDomain: "cryptoproject-e243e.firebaseapp.com",
@@ -7,8 +6,8 @@ var config = {
   storageBucket: "cryptoproject-e243e.appspot.com",
   messagingSenderId: "754040931090"
 };
-firebase.initializeApp(config);
 
+firebase.initializeApp(config);
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
@@ -21,7 +20,7 @@ btnLogin.addEventListener('click', e => {
   const pass = txtPassword.value;
   const auth = firebase.auth();
   const promise = auth.signInWithEmailAndPassword(email, pass);
-  promise.catch( e => console.log(e.message));
+  promise.catch(e => console.log(e.message));
 
 });
 btnSignUp.addEventListener('click', e => {
@@ -31,40 +30,18 @@ btnSignUp.addEventListener('click', e => {
   const auth = firebase.auth();
   const promise = auth.createUserWithEmailAndPassword(email, pass);
   promise
-  .catch( e => console.log(e.message));
+    .catch(e => console.log(e.message));
 
 });
 btnSignOut.addEventListener('click', e => {
   firebase.auth().signOut();
 })
-
-firebase.auth().onAuthStateChanged(firebaseUser => { 
+firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
     console.log(firebaseUser);
     btnSignOut.classList.remove('invisible');
+    window.location = 'index.html';
   } else {
     console.log("not logged in");
   }
-})
-
-
-// const auth = firebase.auth();
-
-// auth.signInWithEmailAndPassword(email, pass);
-
-// auth.createUserWithEmailAndPassword(email, pass);
-// auth.onAuthStateChanged(firebaseUser => { })
-
-// var database = firebase.database();
-// var name = "";
-// var password = "";
-
-// var name = "";
-// var password = "";
-// $("#signup").on("click", function (event) {
-//   event.preventDefault();
-//   name = $("#user").val().trim();
-//   password = $("#pass").val().trim();
-
-
-// }) 
+});

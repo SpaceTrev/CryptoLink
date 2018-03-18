@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Favorite currencys</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:100,400,600,700">
+</head>
+
+<style>
+    body {
+        font-family: "Josefin Sans";
+        background-color: aliceblue;
+    }
+
+    div {
+        display: block;
+    }
+
+    button {
+        margin: auto;
+        width: auto;
+        height: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        line-height: 20px;
+        background-color: rgb(5, 18, 57);
+        border-radius: 100px;
+    }
+
+    .crypto-button-color {
+        color: slategray;
+    }
+
+    .request-color {
+        color: rgb(97, 167, 214);
+    }
+
+</style>
+
+<body>
+
+    <div></div>
+
+    <div class="container">
+        <h1>Currency Search</h1>
+
+        <div id="display"></div>
+        <div id="buttons"></div>
+
+        <!-- We'll be dumping our JSON contents in here -->
+        <div id="currency-view"></div>
+
+        <!-- This form will be where users input data about the currencys -->
+        <form id="currency-form">
+            <label for="currency-input">Select your currencies</label>
+            <input type="checkbox" name="cryptoName" id="currency-input" value="BTC">BTC
+            <br>
+
+            <!-- This button will trigger our AJAX call -->
+            <input id="find-currency" type="submit" value="Currency Search">
+        </form>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
+
+
+            // RETURNS EXCHANGE RATE
+            $("#find-currency").on("click", function (event) {
+
+                // event.preventDefault() can be used to prevent an event's default behavior.
+                // Here, it prevents the submit button from trying to submit a form when clicked
+                event.preventDefault();
+
+                var currency = $("#currency-input").val();
+                var queryURL = "https://rest.coinapi.io/v1/exchangerate/" + currency +
+                    "?apikey=D71DDEDE-0DCF-49C1-B3AB-880EE48E4617";
+                var comparisonCoin = [];
+                var compareCoinName = [];
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function (response) {
+                    //$("#currency-view").text(JSON.stringify(response));
+                    console.log(response);
+
+                    comparisonCoin = response.rates;
+
+                    for (var i = 0; i < comparisonCoin.length; i++) {
+                        console.log(comparisonCoin[i]);
+                        console.log(comparisonCoin[i].asset_id_quote);
+                        console.log(comparisonCoin[i].asset_id_quote.rate);
+
+                        var compareCoinName = comparisonCoin[i].asset_id_quote;
+                        var compareRate = comparisonCoin[i].asset_id_quote.rate;
+
+                        //$("#currency-view").text(JSON.stringify(comparisonCoin));
+
+                        var cryptoBtn = $("<button>").addClass("crypto-button crypto crypto-button-color")
+                            .attr("data-crypto", compareCoinName)
+                            .text(compareCoinName)
+                            .appendTo("#buttons");
+                    };
+                    $(".crypto-button").on("click", function () {
+
+                        var requestToDisplay = $("<div>").addClass("crypto request-color")
+                            .text(this).attr("data-crypto")
+                            .appendTo("#display");
+
+                    });
+
+
+                });
+
+                // -----------------------------------------------------------------------
+
+            });
+        </script>
+    </div>
+</body>
+
+</html>
