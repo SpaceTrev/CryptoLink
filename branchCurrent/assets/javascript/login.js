@@ -8,6 +8,7 @@ var config = {
 };
 
 firebase.initializeApp(config);
+const database = firebase.database();
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
@@ -37,9 +38,13 @@ btnSignOut.addEventListener('click', e => {
 })
 firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
-    console.log(firebaseUser);
+    console.log(firebaseUser.uid);
     btnSignOut.classList.remove('invisible');
     window.location = 'index.html';
+    database.ref('users/' + firebaseUser.uid).set({
+      ID: firebaseUser.uid,
+      crypt: ""
+    })
   } else {
     console.log("not logged in");
   }
