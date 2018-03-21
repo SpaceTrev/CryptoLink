@@ -36,19 +36,19 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            $("#coinPrice").append( `<table style="width:100%">` +
-                `<caption>` + coinName + `</caption>` +
-                `<tr>` +
-                `<th>` + 'Price In USD' + `</th>` +
-                `<th>` + 'Market Cap' + `</th>` +
-                `<th>` + 'Coin Rank' + `</th>` +
-              `</tr>`+
-              `<tr>` +
-                `<td>` + coinPrice + `</td>` +
-                `<td>` + marketCap + `</td>` + 
-                `<td>` + coinRank + `</td>` +
-                `</tr>` +
-            `</table>`);
+            // $("#coinPrice").append( `<table style="width:100%">` +
+            //     `<caption>` + coinName + `</caption>` +
+            //     `<tr>` +
+            //     `<th>` + 'Price In USD' + `</th>` +
+            //     `<th>` + 'Market Cap' + `</th>` +
+            //     `<th>` + 'Coin Rank' + `</th>` +
+            //   `</tr>`+
+            //   `<tr>` +
+            //     `<td>` + coinPrice + `</td>` +
+            //     `<td>` + marketCap + `</td>` + 
+            //     `<td>` + coinRank + `</td>` +
+            //     `</tr>` +
+            // `</table>`);
             console.log(response);
             console.log(firebase.auth().currentUser);
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
