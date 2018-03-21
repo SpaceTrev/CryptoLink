@@ -24,6 +24,8 @@ btnLogin.addEventListener('click', e => {
   promise.catch(e => console.log(e.message));
 
 });
+
+
 btnSignUp.addEventListener('click', e => {
   e.preventDefault();
   const email = txtEmail.value;
@@ -41,10 +43,14 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     console.log(firebaseUser.uid);
     btnSignOut.classList.remove('invisible');
     window.location = 'index.html';
-    database.ref('users/' + firebaseUser.uid).set({
-      ID: firebaseUser.uid,
-      crypt: ""
-    })
+
+    if (!database.ref('users/' + firebaseUser.uid)){
+      database.ref('users/' + firebaseUser.uid).set({
+        ID: firebaseUser.uid
+      })
+    }
+    
+
   } else {
     console.log("not logged in");
   }
