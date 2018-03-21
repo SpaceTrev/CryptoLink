@@ -12,7 +12,7 @@ var config = {
   
   btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
-        window.location = 'signin.html';
+        window.location = 'index.html';
     }});
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 function createButtons() {
