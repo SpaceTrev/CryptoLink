@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
-    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-    <title>Sign IN</title>
+    <title>CryptoLink App</title>
+
+    <!-- Bootstrap and local CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
 </head>
 
 <body>
@@ -19,25 +21,24 @@
                     <div class="col-md-6 mx-auto">
 
                         <!-- form card login -->
-                        <div class="card rounded-0">
-                            <div class="card-header">
+                        <div class="card bg-dark text-white">
+                            <div class="card-header border-bottom border-white">
                                 <h3 class="mb-0">Login</h3>
                             </div>
                             <div class="card-body">
                                 <form class="form" id="loginForm">
                                     <div class="form-group">
                                         <label for="user">Username</label>
-                                        <input type="text" class="form-control form-control-lg rounded-0" name="user" id="user">
-
+                                        <input class="form-control mr-sm-2" id="user" type="text" placeholder="Enter email" aria-label="user">
                                     </div>
                                     <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" class="form-control form-control-lg rounded-0" id="pass">
+                                        <label for="password">Password</label>
+                                        <input class="form-control mr-sm-2" id="pass" type="password" placeholder="Password" aria-label="password">
                                     </div>
                                     <div>
-                                        <button class="btn btn-success btn-lg float-right" id="login">Login</button>
-                                        <button class="btn btn-success btn-lg float-right" id="signup">SignUp</button>
-                                        <button class="btn btn-success btn-lg float-right invisible" id="logout">Logout</button>
+                                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="login">Login</button>
+                                        <button class="btn btn-outline-success ml-2 my-sm-0" type="submit" id="signup">Signup</button>
+                                        <button class="btn btn-outline-success ml-2 my-sm-0 invisible" type="submit" id="logout">Logout</button>
                                     </div>
                                 </form>
                             </div>
@@ -56,6 +57,15 @@
         </div>
         <!--/row-->
     </div>
+
+    <!-- jQuery first, then Tether, then Bootstrap JS, the Firebase, Then local -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
     <script src="assets/javascript/login.js"></script>
 </body>
 

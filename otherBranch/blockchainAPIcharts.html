@@ -115,16 +115,13 @@
 
                     $(".crypto-button").on("click", function () {
 
-                        var requestToDisplay = $("<div>").addClass("crypto request-color")
-                            .text($(this).attr("data-crypto"))
-                            .appendTo("#display");
-                    });
+                        var requestToDisplay = $("<div>");
+                        var pName = $("<p>").text($(this).attr("data-crypto"));
+                        var pRate = $("<p>").text($(this).attr("data-rate"));
 
-                    $(".crypto-button").on("click", function () {
-
-                        var requestrateToDisplay = $("<div>").addClass("crypto request-rate")
-                            .text($(this).attr("data-rate"))
-                            .appendTo("#display");
+                        requestToDisplay.append(pName);
+                        requestToDisplay.append(pRate);
+                        $("#display").append(requestToDisplay);
 
                     });
                 });
