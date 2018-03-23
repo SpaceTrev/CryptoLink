@@ -5,15 +5,44 @@ var config = {
     projectId: "cryptoproject-e243e",
     storageBucket: "cryptoproject-e243e.appspot.com",
     messagingSenderId: "754040931090"
-  };
-  firebase.initializeApp(config);
-  var database = firebase.database();
-  const btnSignOut = document.getElementById('logout');
-  
-  btnSignOut.addEventListener('click', e => {
+};
+firebase.initializeApp(config);
+var database = firebase.database();
+const btnSignOut = document.getElementById('logout');
+
+btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
-    }});
+    }
+});
+
+
+
+
+function submitButton() {
+    console.log("we r inside")
+    event.preventDefault();
+    var submitID = $(this).attr('id');
+    console.log(submitID)
+    var amount = $("#" + submitID+"1").val().trim();
+    console.log(amount)
+
+    $("#"+ submitID).remove();
+    $("#"+ submitID+"1").remove();
+
+    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput"+submitID).append(`${amount}`);
+}
+
+
+// $(".submitButton").on("click", function (event) {
+//     event.preventDefault();
+//     var userInput = $('.ammountInput').val().trim();
+//     $(".cointAmmountInput").empty();
+//     $(".cointAmmountInput").append(userInput);
+// });
+
+
+// 
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 function createButtons() {
     $("#coinPrice").empty();
@@ -55,7 +84,7 @@ function displayCoin(name) {
                 name: coinName
             })
 
-            
+
         });
 }
 
@@ -70,32 +99,34 @@ function displaySavedCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            $("#coinPrice").append( `<table style="width:100%">` +
+            $("#coinPrice").append(`<table style="width:100%">` +
                 `<caption>` + coinName + `</caption>` +
                 `<tr>` +
                 `<th>` + 'Price In USD' + `</th>` +
                 `<th>` + 'Market Cap' + `</th>` +
-                `<th>` + 'Coin Rank' + `</th>` +
-              `</tr>`+
-              `<tr>` +
-                `<td>` + coinPrice + `</td>` +
-                `<td>` + marketCap + `</td>` + 
-                `<td>` + coinRank + `</td>` +
+               
+                `<th>` + 'Ammount' + `</th>` +
                 `</tr>` +
-            `</table>`);
+                `<tr>` +
+                `<td>` + coinPrice + `</td>` +
+                `<td>` + marketCap + `</td>` +
+                
+                `<td class='coinAmmountInput${coinName}'><input type='text' name='ammount' id='${coinName}1'> <button class="submitButton btn btn-success float-right" id="${coinName}">submit</button></td>` +
+                `</tr>` +
+                `</table>`);
 
-        });
+        })
 }
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
+        database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
             console.log(snapshot.val().name);
             displaySavedCoin(snapshot.val().name);
 
         });
     }
-  });
+});
 
 $("#addCoin").on("click", function (event) {
     event.preventDefault();
@@ -108,16 +139,17 @@ $("#addCoin").on("click", function (event) {
     $("#coinButtonView").append(buttonArr);
 });
 
-    $(document).on("click", ".coinButtons", displayCoin);
-    createButtons();
+$(document).on("click", ".coinButtons", displayCoin);
+$(document).on("click", ".submitButton", submitButton)
+createButtons();
 
     // window.onload = function(){
     //     firebase.auth().onAuthStateChanged(function(user) {
     //         if (user) {
     //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
     //                 console.log(snapshot.val().name);
-        
-        
+
+
     //             });
     //         }
     //       });
@@ -128,11 +160,11 @@ $("#addCoin").on("click", function (event) {
     //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
     //                 console.log(snapshot.val().name);
     //                 displaySavedCoin(snapshot.val().name)
-        
+
     //             });
     //         }
     //       });
 
-    
-       
+
+
     // })
