@@ -31,10 +31,18 @@
                 <a class="nav-item nav-link" href="#">Pricing</a>
             </div>
         </div>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0 invisible" id="loggedin">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             <button class="btn btn-outline-success ml-2 my-sm-0" type="submit" id="logout">Logout</button>
+        </form>
+        <form class="form-inline my-2 my-lg-0 text-white" id="loggedout">
+            <label for="user">Username</label>
+            <input class="form-control mx-sm-2" type="email" placeholder="Enter email" aria-label="user" id="user">
+            <label for="password">Password</label>
+            <input class="form-control ml-sm-2" type="password" placeholder="Password" aria-label="password" id="pass">
+            <button class="btn btn-outline-success ml-2 my-sm-0" type="submit" id="login">Log In</button>
+            <button class="btn btn-outline-success ml-2 my-sm-0" type="submit" id="signup">Signup</button>
         </form>
     </nav>
 
@@ -146,7 +154,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-    <script src="assets/javascript/logic.js"></script>  
+    <script src="assets/javascript/login.js"></script>
+    <script src="assets/javascript/logic.js"></script>
 </body>
 
 </html>
