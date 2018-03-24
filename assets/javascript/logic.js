@@ -14,6 +14,8 @@ var config = {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }});
+
+    
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 function createButtons() {
     $("#coinPrice").empty();
@@ -36,21 +38,6 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            // $("#coinPrice").append( `<table style="width:100%">` +
-            //     `<caption>` + coinName + `</caption>` +
-            //     `<tr>` +
-            //     `<th>` + 'Price In USD' + `</th>` +
-            //     `<th>` + 'Market Cap' + `</th>` +
-            //     `<th>` + 'Coin Rank' + `</th>` +
-            //   `</tr>`+
-            //   `<tr>` +
-            //     `<td>` + coinPrice + `</td>` +
-            //     `<td>` + marketCap + `</td>` + 
-            //     `<td>` + coinRank + `</td>` +
-            //     `</tr>` +
-            // `</table>`);
-            console.log(response);
-            console.log(firebase.auth().currentUser);
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
                 name: coinName
             })
@@ -110,29 +97,3 @@ $("#addCoin").on("click", function (event) {
 
     $(document).on("click", ".coinButtons", displayCoin);
     createButtons();
-
-    // window.onload = function(){
-    //     firebase.auth().onAuthStateChanged(function(user) {
-    //         if (user) {
-    //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
-    //                 console.log(snapshot.val().name);
-        
-        
-    //             });
-    //         }
-    //       });
-    // };
-    // // $(document).ready(function(){
-    //     firebase.auth().onAuthStateChanged(function(user) {
-    //         if (user) {
-    //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
-    //                 console.log(snapshot.val().name);
-    //                 displaySavedCoin(snapshot.val().name)
-        
-    //             });
-    //         }
-    //       });
-
-    
-       
-    // })
