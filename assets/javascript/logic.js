@@ -14,8 +14,7 @@ const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
-<<<<<<< HEAD
-=======
+
 
 btnLogin.addEventListener('click', e => {
     e.preventDefault();
@@ -54,13 +53,13 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     }
 });
 
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
+
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
-<<<<<<< HEAD
+
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -82,7 +81,45 @@ var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", 
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
 
 
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
+// https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k
+
+function abbrNum(number, decPlaces) {
+    // 2 decimal places => 100, 3 => 1000, etc
+    decPlaces = Math.pow(10,decPlaces);
+
+    // Enumerate number abbreviations
+    var abbrev = [ "K", "M", "B", "T" ];
+
+    // Go through the array backwards, so we do the largest first
+    for (var i=abbrev.length-1; i>=0; i--) {
+
+        // Convert array index to "1000", "1000000", etc
+        var size = Math.pow(10,(i+1)*3);
+
+        // If the number is bigger or equal do the abbreviation
+        if(size <= number) {
+             // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+             // This gives us nice rounding to a particular decimal place.
+             number = Math.round(number*decPlaces/size)/decPlaces;
+
+             // Handle special case where we round up to the next abbreviation
+             if((number == 1000) && (i < abbrev.length - 1)) {
+                 number = 1;
+                 i++;
+             }
+
+             // Add the letter for the abbreviation
+             number += abbrev[i];
+
+             // We are done... stop
+             break;
+        }
+    }
+
+    return number;
+}
+
+
 function createButtons() {
     
     $("#coinPrice").empty();
@@ -94,17 +131,19 @@ function createButtons() {
             method: "GET"
         })
             .then(function (response) {
-                var marketCap = response[0].market_cap_usd;
+                var marketCap = abbrNum(response[0].market_cap_usd,3);
                 var coinPrice = response[0].price_usd;
                 var nameId = response[0].name;
+                var priceChange = response[0].percent_change_24h;
                 $("#cryptoSpace").append(`
         <div class="col-md-6 col-lg-3">
             <div class="card" data-name=${coinButtonArray[i]}>
                 <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
                 <div class="card-body">
                 <h5 class="card-title">${nameId}</h5>
-                <p class="card-text">Price: ${coinPrice}</p>
-                <p class="card-text">MarketCap: ${marketCap}</p>
+                <p class="card-text">Price: ${coinPrice}$</p>
+                <p class="card-text">MarketCap: ${marketCap}$</p>
+                <p class="card-text">24hr change: ${priceChange} %</p>
                 <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio">Add to Portfolio</button>
             </div>
         </div>
@@ -115,6 +154,8 @@ function createButtons() {
 
     }
 }
+
+
 function displayCoin(name) {
     var coinName = $(this).attr("data-name");
     var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinName + "/";
@@ -126,11 +167,10 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-<<<<<<< HEAD
+
             console.log(response);
             console.log(firebase.auth().currentUser);
-=======
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
+
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
                 name: coinName
             })
@@ -187,9 +227,7 @@ $("#addCoin").on("click", function (event) {
     $("#coinButtonView").append(buttonArr);
 });
 $(document).on("click", ".coinButtons", displayCoin);
-<<<<<<< HEAD
+
 $(document).on("click", ".submitButton", submitButton)
 createButtons();
-=======
-createButtons();
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
+
