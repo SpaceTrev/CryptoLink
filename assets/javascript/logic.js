@@ -9,16 +9,11 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 const btnSignOut = document.getElementById('logout');
-
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
-
-
-
-
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -32,17 +27,7 @@ function submitButton() {
 
     $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput"+submitID).append(`${amount}`);
 }
-
-
-// $(".submitButton").on("click", function (event) {
-//     event.preventDefault();
-//     var userInput = $('.ammountInput').val().trim();
-//     $(".cointAmmountInput").empty();
-//     $(".cointAmmountInput").append(userInput);
-// });
-
-
-// 
+ 
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 function createButtons() {
     $("#coinPrice").empty();
@@ -65,19 +50,6 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            // $("#coinPrice").append( `<table style="width:100%">` +
-            //     `<caption>` + coinName + `</caption>` +
-            //     `<tr>` +
-            //     `<th>` + 'Price In USD' + `</th>` +
-            //     `<th>` + 'Market Cap' + `</th>` +
-            //     `<th>` + 'Coin Rank' + `</th>` +
-            //   `</tr>`+
-            //   `<tr>` +
-            //     `<td>` + coinPrice + `</td>` +
-            //     `<td>` + marketCap + `</td>` + 
-            //     `<td>` + coinRank + `</td>` +
-            //     `</tr>` +
-            // `</table>`);
             console.log(response);
             console.log(firebase.auth().currentUser);
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
@@ -87,7 +59,6 @@ function displayCoin(name) {
 
         });
 }
-
 function displaySavedCoin(name) {
     var coinName = name;
     var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinName + "/";
@@ -117,7 +88,6 @@ function displaySavedCoin(name) {
 
         })
 }
-
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
@@ -127,7 +97,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
     }
 });
-
 $("#addCoin").on("click", function (event) {
     event.preventDefault();
     var coinName = $("#coinInput").val().trim();
@@ -138,33 +107,6 @@ $("#addCoin").on("click", function (event) {
     buttonArr.text(coinName);
     $("#coinButtonView").append(buttonArr);
 });
-
 $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", ".submitButton", submitButton)
 createButtons();
-
-    // window.onload = function(){
-    //     firebase.auth().onAuthStateChanged(function(user) {
-    //         if (user) {
-    //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
-    //                 console.log(snapshot.val().name);
-
-
-    //             });
-    //         }
-    //       });
-    // };
-    // // $(document).ready(function(){
-    //     firebase.auth().onAuthStateChanged(function(user) {
-    //         if (user) {
-    //             database.ref(`users/${user.uid}/cryptos`).on('child_added', function(snapshot) {
-    //                 console.log(snapshot.val().name);
-    //                 displaySavedCoin(snapshot.val().name)
-
-    //             });
-    //         }
-    //       });
-
-
-
-    // })
