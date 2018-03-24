@@ -6,14 +6,61 @@ var config = {
     storageBucket: "cryptoproject-e243e.appspot.com",
     messagingSenderId: "754040931090"
 };
+
 firebase.initializeApp(config);
 var database = firebase.database();
+const txtEmail = document.getElementById("user");
+const txtPassword = document.getElementById("pass");
+const btnLogin = document.getElementById("login");
+const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
+<<<<<<< HEAD
+=======
+
+btnLogin.addEventListener('click', e => {
+    e.preventDefault();
+    const email = txtEmail.value;
+    const pass = txtPassword.value;
+    const auth = firebase.auth();
+    const promise = auth.signInWithEmailAndPassword(email, pass);
+    promise.catch(e => console.log(e.message));
+
+});
+btnSignUp.addEventListener('click', e => {
+    e.preventDefault();
+    const email = txtEmail.value;
+    const pass = txtPassword.value;
+    const auth = firebase.auth();
+    const promise = auth.createUserWithEmailAndPassword(email, pass);
+    promise
+        .catch(e => console.log(e.message));
+});
+btnSignOut.addEventListener('click', e => {
+    firebase.auth().signOut();
+})
+firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+        console.log(firebaseUser.uid);
+        btnSignOut.classList.remove('invisible');
+        // window.location = 'index.html';
+        $("#loggedin").removeClass("invisible")
+        $("#loggedout").empty()
+        database.ref('users/' + firebaseUser.uid).set({
+            ID: firebaseUser.uid,
+            crypt: ""
+        })
+    } else {
+        console.log("not logged in");
+    }
+});
+
+>>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
+<<<<<<< HEAD
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -29,14 +76,43 @@ function submitButton() {
 }
  
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
+=======
+
+
+var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
+
+
+>>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
 function createButtons() {
+    
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
-        var buttonArr = $("<button class='btn btn-info'>");
-        buttonArr.addClass("coinButtons");
-        buttonArr.attr("data-name", coinButtonArray[i]);
-        buttonArr.text(coinButtonArray[i]);
-        $("#coinButtonView").append(buttonArr);
+        var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinButtonArray[i] + "/";
+        
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+            .then(function (response) {
+                var marketCap = response[0].market_cap_usd;
+                var coinPrice = response[0].price_usd;
+                var nameId = response[0].name;
+                $("#cryptoSpace").append(`
+        <div class="col-md-6 col-lg-3">
+            <div class="card" data-name=${coinButtonArray[i]}>
+                <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
+                <div class="card-body">
+                <h5 class="card-title">${nameId}</h5>
+                <p class="card-text">Price: ${coinPrice}</p>
+                <p class="card-text">MarketCap: ${marketCap}</p>
+                <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio">Add to Portfolio</button>
+            </div>
+        </div>
+    </div>
+        `)
+
+            });
+
     }
 }
 function displayCoin(name) {
@@ -50,8 +126,11 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
+<<<<<<< HEAD
             console.log(response);
             console.log(firebase.auth().currentUser);
+=======
+>>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
                 name: coinName
             })
@@ -75,13 +154,13 @@ function displaySavedCoin(name) {
                 `<tr>` +
                 `<th>` + 'Price In USD' + `</th>` +
                 `<th>` + 'Market Cap' + `</th>` +
-               
+
                 `<th>` + 'Ammount' + `</th>` +
                 `</tr>` +
                 `<tr>` +
                 `<td>` + coinPrice + `</td>` +
                 `<td>` + marketCap + `</td>` +
-                
+
                 `<td class='coinAmmountInput${coinName}'><input type='text' name='ammount' id='${coinName}1'> <button class="submitButton btn btn-success float-right" id="${coinName}">submit</button></td>` +
                 `</tr>` +
                 `</table>`);
@@ -108,5 +187,9 @@ $("#addCoin").on("click", function (event) {
     $("#coinButtonView").append(buttonArr);
 });
 $(document).on("click", ".coinButtons", displayCoin);
+<<<<<<< HEAD
 $(document).on("click", ".submitButton", submitButton)
 createButtons();
+=======
+createButtons();
+>>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277

@@ -8,7 +8,7 @@ var config = {
 };
 
 firebase.initializeApp(config);
-const database = firebase.database();
+var database = firebase.database();
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
@@ -24,8 +24,6 @@ btnLogin.addEventListener('click', e => {
   promise.catch(e => console.log(e.message));
 
 });
-
-
 btnSignUp.addEventListener('click', e => {
   e.preventDefault();
   const email = txtEmail.value;
@@ -42,15 +40,13 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
     console.log(firebaseUser.uid);
     btnSignOut.classList.remove('invisible');
-    window.location = 'homepage.html';
-
-    if (!database.ref('users/' + firebaseUser.uid)){
-      database.ref('users/' + firebaseUser.uid).set({
-        ID: firebaseUser.uid
-      })
-    }
-    
-
+    // window.location = 'index.html';
+    $("#loggedin").removeClass("invisible")
+    $("#loggedout").empty()
+    database.ref('users/' + firebaseUser.uid).set({
+      ID: firebaseUser.uid,
+      crypt: ""
+    })
   } else {
     console.log("not logged in");
   }
