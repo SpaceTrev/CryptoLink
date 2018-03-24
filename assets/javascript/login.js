@@ -43,6 +43,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     // window.location = 'index.html';
     $("#loggedin").removeClass("invisible")
     $("#loggedout").empty()
+    
     database.ref('users/' + firebaseUser.uid).set({
       ID: firebaseUser.uid,
       crypt: ""
