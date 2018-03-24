@@ -62,6 +62,11 @@ btnSignOut.addEventListener('click', e => {
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
 
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 function createButtons() {
     
     $("#coinPrice").empty();
