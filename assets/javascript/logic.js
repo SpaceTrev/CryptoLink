@@ -131,23 +131,29 @@ function createButtons() {
             method: "GET"
         })
             .then(function (response) {
+                var colorPrice;
                 var marketCap = abbrNum(response[0].market_cap_usd,3);
                 var coinPrice = response[0].price_usd;
                 var nameId = response[0].name;
                 var priceChange = response[0].percent_change_24h;
+                if (priceChange < 0) {
+                    colorPrice = "redPrice"
+                }else{
+                    colorPrice = "greenPrice"
+                }
                 $("#cryptoSpace").append(`
-        <div class="col-md-6 col-lg-3">
-            <div class="card" data-name=${coinButtonArray[i]}>
-                <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
-                <div class="card-body">
-                <h5 class="card-title">${nameId}</h5>
-                <p class="card-text">Price: ${coinPrice}$</p>
-                <p class="card-text">MarketCap: ${marketCap}$</p>
-                <p class="card-text">24hr change: ${priceChange} %</p>
-                <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio">Add to Portfolio</button>
+                     <div class="col-md-6 col-lg-3">
+                        <div class="card" data-name=${coinButtonArray[i]}>
+                        <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
+                        <div class="card-body">
+                        <h5 class="card-title">${nameId}</h5>
+                        <p class="card-text">Price: ${coinPrice}$</p>
+                        <p class="card-text">MarketCap: ${marketCap}$</p>
+                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
+                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio">Add to Portfolio</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
         `)
 
             });

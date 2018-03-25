@@ -11,3 +11,13 @@ body {
 #cryptoSpace > div:nth-child(1) > div {
     margin-bottom: 10px;
 }
+
+.redPrice{
+    background-color: red;
+    color: white;
+}
+
+.greenPrice {
+    background-color: green;
+    color: white;
+}
