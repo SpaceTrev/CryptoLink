@@ -14,53 +14,11 @@ const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
-<<<<<<< HEAD
-=======
-
-btnLogin.addEventListener('click', e => {
-    e.preventDefault();
-    const email = txtEmail.value;
-    const pass = txtPassword.value;
-    const auth = firebase.auth();
-    const promise = auth.signInWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
-
-});
-btnSignUp.addEventListener('click', e => {
-    e.preventDefault();
-    const email = txtEmail.value;
-    const pass = txtPassword.value;
-    const auth = firebase.auth();
-    const promise = auth.createUserWithEmailAndPassword(email, pass);
-    promise
-        .catch(e => console.log(e.message));
-});
-btnSignOut.addEventListener('click', e => {
-    firebase.auth().signOut();
-})
-firebase.auth().onAuthStateChanged(firebaseUser => {
-    if (firebaseUser) {
-        console.log(firebaseUser.uid);
-        btnSignOut.classList.remove('invisible');
-        // window.location = 'index.html';
-        $("#loggedin").removeClass("invisible")
-        $("#loggedout").empty()
-        database.ref('users/' + firebaseUser.uid).set({
-            ID: firebaseUser.uid,
-            crypt: ""
-        })
-    } else {
-        console.log("not logged in");
-    }
-});
-
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
-<<<<<<< HEAD
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -76,13 +34,6 @@ function submitButton() {
 }
  
 var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
-=======
-
-
-var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
-
-
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
 function createButtons() {
     
     $("#coinPrice").empty();
@@ -126,11 +77,8 @@ function displayCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-<<<<<<< HEAD
             console.log(response);
             console.log(firebase.auth().currentUser);
-=======
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277
             database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
                 name: coinName
             })
@@ -187,9 +135,5 @@ $("#addCoin").on("click", function (event) {
     $("#coinButtonView").append(buttonArr);
 });
 $(document).on("click", ".coinButtons", displayCoin);
-<<<<<<< HEAD
 $(document).on("click", ".submitButton", submitButton)
 createButtons();
-=======
-createButtons();
->>>>>>> fe503abb4226892da9539bc4acc98036f0c5b277

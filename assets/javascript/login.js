@@ -41,7 +41,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     console.log(firebaseUser.uid);
     btnSignOut.classList.remove('invisible');
     // window.location = 'index.html';
-    $("#loggedin").removeClass("invisible")
+    $("#loggedin").removeClass("d-none")
     $("#loggedout").empty()
     
     database.ref('users/' + firebaseUser.uid).set({
