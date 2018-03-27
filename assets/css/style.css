@@ -6,3 +6,8 @@ body {
     width: 200px;
     float: right;
 }
+
+
+#cryptoSpace > div:nth-child(1) > div {
+    margin-bottom: 10px;
+}
