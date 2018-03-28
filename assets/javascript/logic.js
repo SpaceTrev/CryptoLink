@@ -163,66 +163,67 @@ function createButtons() {
 
     }
 }
-$(document).on(`click`, `#addPortfolio${nameId}`, function(event){
-    $("#portfolioCryptoSpace").append(`<table class="table">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Crypto</th>
-            <th scope="col">Price USD:</th>
-            <th scope="col">Market Cap</th>
-            <th scope="col">Ammount</th>
-            <th scope="col">Value</th>
-            <th scope="col">24 Hour Change</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">4</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">5</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>    
-        </tr>
-    </tbody>
-</table>  
-</div>`)
-    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
-        name: coinName
-    })
-});
+// $(document).on(`click`, `#addPortfolio${nameId}`, function(event){
+//     $("#portfolioCryptoSpace").append(`<table class="table">
+//     <thead class="thead-light">
+//         <tr>
+//             <th scope="col">Crypto</th>
+//             <th scope="col">Price USD:</th>
+//             <th scope="col">Market Cap</th>
+//             <th scope="col">Ammount</th>
+//             <th scope="col">Value</th>
+//             <th scope="col">24 Hour Change</th>
+//         </tr>
+//     </thead>
+//     <tbody>
+//         <tr>
+//             <th scope="row">1</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">2</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">3</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">4</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">5</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>    
+//         </tr>
+//     </tbody>
+// </table>  
+// </div>`)
+
+//     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+//         name: coinName
+//     })
+// });
 
 
 function coinToPortfolio(name) {
