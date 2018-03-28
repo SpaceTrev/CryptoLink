@@ -199,22 +199,22 @@ $(document).on(`click`, `#addPortfolio${nameId}`, function(event){
         </tr>
         <tr>
             <th scope="row">4</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
         </tr>
         <tr>
             <th scope="row">5</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>    
         </tr>
     </tbody>
-</table>
+</table>  
 </div>`)
     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
         name: coinName
@@ -296,4 +296,3 @@ $(document).on("click", ".coinButtons", displayCoin);
 
 $(document).on("click", ".submitButton", submitButton)
 createButtons();
-
