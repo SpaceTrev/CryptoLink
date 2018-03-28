@@ -9,6 +9,8 @@ var config = {
 
 firebase.initializeApp(config);
 var database = firebase.database();
+
+
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
@@ -42,7 +44,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
         console.log(firebaseUser.uid);
         btnSignOut.classList.remove('invisible');
         // window.location = 'index.html';
-        $("#loggedin").removeClass("invisible")
+        $("#loggedin").removeClass("d-none")
         $("#loggedout").empty()
         database.ref('users/' + firebaseUser.uid).set({
             ID: firebaseUser.uid,
@@ -59,7 +61,6 @@ btnSignOut.addEventListener('click', e => {
         window.location = 'index.html';
     }
 });
-
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -85,34 +86,34 @@ var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", 
 
 function abbrNum(number, decPlaces) {
     // 2 decimal places => 100, 3 => 1000, etc
-    decPlaces = Math.pow(10,decPlaces);
+    decPlaces = Math.pow(10, decPlaces);
 
     // Enumerate number abbreviations
-    var abbrev = [ "K", "M", "B", "T" ];
+    var abbrev = ["K", "M", "B", "T"];
 
     // Go through the array backwards, so we do the largest first
-    for (var i=abbrev.length-1; i>=0; i--) {
+    for (var i = abbrev.length - 1; i >= 0; i--) {
 
         // Convert array index to "1000", "1000000", etc
-        var size = Math.pow(10,(i+1)*3);
+        var size = Math.pow(10, (i + 1) * 3);
 
         // If the number is bigger or equal do the abbreviation
-        if(size <= number) {
-             // Here, we multiply by decPlaces, round, and then divide by decPlaces.
-             // This gives us nice rounding to a particular decimal place.
-             number = Math.round(number*decPlaces/size)/decPlaces;
+        if (size <= number) {
+            // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+            // This gives us nice rounding to a particular decimal place.
+            number = Math.round(number * decPlaces / size) / decPlaces;
 
-             // Handle special case where we round up to the next abbreviation
-             if((number == 1000) && (i < abbrev.length - 1)) {
-                 number = 1;
-                 i++;
-             }
+            // Handle special case where we round up to the next abbreviation
+            if ((number == 1000) && (i < abbrev.length - 1)) {
+                number = 1;
+                i++;
+            }
 
-             // Add the letter for the abbreviation
-             number += abbrev[i];
+            // Add the letter for the abbreviation
+            number += abbrev[i];
 
-             // We are done... stop
-             break;
+            // We are done... stop
+            break;
         }
     }
 
@@ -121,24 +122,24 @@ function abbrNum(number, decPlaces) {
 
 
 function createButtons() {
-    
+
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
         var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinButtonArray[i] + "/";
-        
+
         $.ajax({
             url: queryURL,
             method: "GET"
         })
             .then(function (response) {
                 var colorPrice;
-                var marketCap = abbrNum(response[0].market_cap_usd,3);
+                var marketCap = abbrNum(response[0].market_cap_usd, 3);
                 var coinPrice = response[0].price_usd;
                 var nameId = response[0].name;
                 var priceChange = response[0].percent_change_24h;
                 if (priceChange < 0) {
                     colorPrice = "redPrice"
-                }else{
+                } else {
                     colorPrice = "greenPrice"
                 }
                 $("#cryptoSpace").append(`
@@ -150,7 +151,7 @@ function createButtons() {
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
                         <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
-                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio${nameId}">Add to Portfolio</button>
+                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
                     </div>
                 </div>
             </div>
@@ -160,89 +161,75 @@ function createButtons() {
 
     }
 }
-$(document).on(`click`, `#addPortfolio${nameId}`, function(event){
-    $("#portfolioCryptoSpace").append(`<table class="table">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Crypto</th>
-            <th scope="col">Price USD:</th>
-            <th scope="col">Market Cap</th>
-            <th scope="col">Ammount</th>
-            <th scope="col">Value</th>
-            <th scope="col">24 Hour Change</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">4</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-        </tr>
-        <tr>
-            <th scope="row">5</th>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>
-            <td>${}</td>    
-        </tr>
-    </tbody>
-</table>  
-</div>`)
-    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+// $(document).on(`click`, `#addPortfolio${nameId}`, function(event){
+//     $("#portfolioCryptoSpace").append(`<table class="table">
+//     <thead class="thead-light">
+//         <tr>
+//             <th scope="col">Crypto</th>
+//             <th scope="col">Price USD:</th>
+//             <th scope="col">Market Cap</th>
+//             <th scope="col">Ammount</th>
+//             <th scope="col">Value</th>
+//             <th scope="col">24 Hour Change</th>
+//         </tr>
+//     </thead>
+//     <tbody>
+//         <tr>
+//             <th scope="row">1</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">2</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">3</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">4</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//         </tr>
+//         <tr>
+//             <th scope="row">5</th>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>
+//             <td>${}</td>    
+//         </tr>
+//     </tbody>
+// </table>  
+// </div>`)
+//     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+//         name: coinName
+//     })
+// });
+
+
+function coinToPortfolio(name) {
+    var coinName = $(this).attr("data-name");
+    
+     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
         name: coinName
     })
-});
 
-
-function displayCoin(name) {
-    var coinName = $(this).attr("data-name");
-    var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinName + "/";
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-        .then(function (response) {
-            var coinRank = response[0].rank;
-            var marketCap = response[0].market_cap_usd;
-            var coinPrice = response[0].price_usd;
-
-            console.log(response);
-            console.log(firebase.auth().currentUser);
-
-            database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
-                name: coinName
-            })
-
-
-        });
 }
 function displaySavedCoin(name) {
     var coinName = name;
@@ -292,7 +279,7 @@ $("#addCoin").on("click", function (event) {
     buttonArr.text(coinName);
     $("#coinButtonView").append(buttonArr);
 });
-$(document).on("click", ".coinButtons", displayCoin);
 
-$(document).on("click", ".submitButton", submitButton)
+// $(document).on("click", ".coinButtons", displayCoin);
+$(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
