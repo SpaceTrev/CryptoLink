@@ -143,14 +143,24 @@ function createButtons() {
                     colorPrice = "greenPrice"
                 }
                 $("#cryptoSpace").append(`
+<<<<<<< HEAD
                      <div class="grabCard col-md-6 col-lg-3">
                         <div class="card" data-name=${coinButtonArray[i]}>
+=======
+
+                     <div class="col-md-6 col-lg-3">
+                        <div class="card">
+>>>>>>> master
                         <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
                         <div class="card-body">
                         <h5 class="card-title">${nameId}</h5>
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
                         <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
                         <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
                     </div>
                 </div>
@@ -283,3 +293,7 @@ $("#addCoin").on("click", function (event) {
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
