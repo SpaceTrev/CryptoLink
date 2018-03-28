@@ -158,8 +158,6 @@ function createButtons() {
     }
 }
 
-
-
 function createSavedButtons(name) {
 
     var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + name + "/";
@@ -194,6 +192,7 @@ function createSavedButtons(name) {
         });
 
 }
+
 
 
 function coinToPortfolio(name) {
