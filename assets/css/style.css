@@ -15,9 +15,24 @@ body {
 .redPrice{
     background-color: red;
     color: white;
+    padding: 5px;
 }
 
 .greenPrice {
     background-color: green;
     color: white;
+    padding: 5px;
+}
+
+.card-body{
+    padding-right: 0px;
+    padding-left: 10px;
+}
+
+.greenColor{
+    color:green;
+}
+
+.redColor{
+    color: red;
 }

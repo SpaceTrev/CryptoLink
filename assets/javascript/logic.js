@@ -56,19 +56,21 @@ btnSignOut.addEventListener('click', e => {
         window.location = 'index.html';
     }
 });
-function submitButton() {
-    console.log("we r inside")
-    event.preventDefault();
-    var submitID = $(this).attr('id');
-    console.log(submitID)
-    var amount = $("#" + submitID + "1").val().trim();
-    console.log(amount)
 
-    $("#" + submitID).remove();
-    $("#" + submitID + "1").remove();
 
-    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
-}
+// function submitButton() {
+//     console.log("we r inside")
+//     event.preventDefault();
+//     var submitID = $(this).attr('id');
+//     console.log(submitID)
+//     var amount = $("#" + submitID + "1").val().trim();
+//     console.log(amount)
+
+//     $("#" + submitID).remove();
+//     $("#" + submitID + "1").remove();
+
+//     $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
+// }
 
 
 
@@ -131,10 +133,20 @@ function createButtons() {
                 var coinPrice = response[0].price_usd;
                 var nameId = response[0].name;
                 var priceChange = response[0].percent_change_24h;
+                var sumChange = roundToTwo(priceChange*coinPrice/100);
+                var textColor;
+                // var btnAdd;
+                // if (checkIfinPortfolio(nameId)){
+                //     btnAdd = `<button class='btn btn-outline-success ml-2' type='submit' id='addPortfolio' data-name='${nameId}'>Added</button>`
+                // }else{
+                //     btnAdd = `<button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>`
+                // }
                 if (priceChange < 0) {
-                    colorPrice = "redPrice"
+                    colorPrice = "redPrice";
+                    textColor = "redColor";
                 } else {
                     colorPrice = "greenPrice"
+                    textColor = "greenColor"
                 }
                 $("#cryptoSpace").append(`
 
@@ -145,7 +157,7 @@ function createButtons() {
                         <h5 class="card-title">${nameId}</h5>
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
-                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
+                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span>  <span class="${textColor}">${sumChange}$</span></p>
 
                         <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
                     </div>
@@ -156,6 +168,9 @@ function createButtons() {
             });
 
     }
+}
+function roundToTwo(num) {    
+    return +(Math.round(num + "e+2")  + "e-2");
 }
 
 function createSavedButtons(name) {
@@ -172,6 +187,7 @@ function createSavedButtons(name) {
             var coinPrice = response[0].price_usd;
             var nameId = response[0].name;
             var priceChange = response[0].percent_change_24h;
+            var sumChange = roundToTwo(priceChange*coinPrice/100);
             if (priceChange < 0) {
                 colorPrice = "redPrice"
             } else {
@@ -184,7 +200,7 @@ function createSavedButtons(name) {
                    <td>${marketCap}</td>
                    <td>To be Announced</td>
                    <td>To be Announced</td>
-                   <td class="${colorPrice}">${priceChange}</td>
+                   <td><span class="${colorPrice}">${priceChange}%</span> <span class="${colorPrice}">${sumChange}$</span></td>
                </tr>
        
        `);
@@ -193,39 +209,34 @@ function createSavedButtons(name) {
 
 }
 
+function checkIfinPortfolio(name){
+    var coinName = name;
+    var nameArray = [];
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
+        console.log(snapshot.val().name);
+        nameArray.push(snapshot.val().name);
+    });
+    if (nameArray.indexOf(coinName)>0){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 
 function coinToPortfolio(name) {
     var coinName = $(this).attr("data-name");
+    var nameArray = [];
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
+        console.log(snapshot.val().name);
+        nameArray.push(snapshot.val().name);
 
-    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
-        name: coinName
-    })
-
-}
-function displaySavedCoin(name) {
-    var coinName = name;
-    var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinName + "/";
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-        .then(function (response) {
-            var coinRank = response[0].rank;
-            var marketCap = response[0].market_cap_usd;
-            var coinPrice = response[0].price_usd;
-            $("tbody").append(`
-            <tr>
-               <th scope="row">${childSnapshot.val().name}</th>
-               <td>${childSnapshot.val().destination}</td>
-               <td>${childSnapshot.val().freq}</td>
-               <td>${moment(nextTrain).format("hh:mm")}</td>
-               <td>${tMinutesTillTrain}</td>
-           </tr>
-   
-   `);
-
+    });
+    if (nameArray.indexOf(coinName)<0){
+        database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+            name: coinName
         })
+    }
 }
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -236,24 +247,24 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
     }
 });
-$("#addCoin").on("click", function (event) {
-    event.preventDefault();
-    var coinName = $("#coinInput").val().trim();
-    coinButtonArray.push(coinName);
-    var buttonArr = $("<button class='btn btn-info'>");
-    buttonArr.addClass("coinButtons");
-    buttonArr.attr("data-name", coinName);
-    buttonArr.text(coinName);
-    $("#coinButtonView").append(buttonArr);
-});
+// $("#addCoin").on("click", function (event) {
+//     event.preventDefault();
+//     var coinName = $("#coinInput").val().trim();
+//     coinButtonArray.push(coinName);
+//     var buttonArr = $("<button class='btn btn-info'>");
+//     buttonArr.addClass("coinButtons");
+//     buttonArr.attr("data-name", coinName);
+//     buttonArr.text(coinName);
+//     $("#coinButtonView").append(buttonArr);
+// });
 
-$("#portfolio").on("click", function () {
-    database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
-        console.log(snapshot.val().name);
-        createSavedButtons(snapshot.val().name);
+// $("#portfolio").on("click", function () {
+//     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
+//         console.log(snapshot.val().name);
+//         createSavedButtons(snapshot.val().name);
 
-    });
-})
+//     });
+// })
 
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
