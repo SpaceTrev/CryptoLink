@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <X-CoinAPI-Key: C3F818BB-21EF-425E-B53C-B069172C81CD>
+    <title>currencies</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:100,400,600,700">
+
+</head>
+
+<style>
+    body {
+        font-family: "Josefin Sans";
+        background-color: aliceblue;
+    }
+
+
+    div {
+        display: block;
+    }
+
+    button {
+        margin: auto;
+        width: auto;
+        height: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        line-height: 20px;
+        background-color: rgb(5, 18, 57);
+        border-radius: 100px;
+    }
+
+    .crypto-crypto-name {
+        color: slategray;
+    }
+
+    .highlights {
+        color: red;
+    }
+
+    .crypto-name {
+        color: rgb(36, 65, 9);
+    }
+
+    .request-rate {
+        color: rgb(0, 70, 117);
+    }
+
+    #topDisplay {
+        background-color: black;
+        color: white;
+    }
+
+    select {
+        width: 500px;
+    }
+</style>
+
+<body>
+
+    <div></div>
+
+    <div class="container">
+        <h1>Currency Search</h1>
+
+        <div id="topDisplay"></div>
+        <div id="display"></div>
+        <div id="buttons"></div>
+
+        <div class="container">
+            <h2>A demo of using multi-select with checkboxes</h2>
+            <select name="multicheckbox[]" multiple="multiple" class="4col active">
+                <option></option>
+            </select>
+        </div>
+
+
+        <!-- We'll be dumping our JSON contents in here -->
+        <div id="currency-view"></div>
+
+        <!-- This form will be where users input data about the currencys -->
+        <form id="currency-form">
+            <label for="currency-input">display currency</label>
+            <input type="checkbox" name="cryptoName" id="currency-input" value="USD">USD
+
+            <br>
+
+            <!-- This button will trigger our AJAX call -->
+            <input id="find-currency" type="submit" value="Currency Search">
+        </form>
+
+
+
+        <script src="https://rawgit.com/mzabriskie/axios/master/dist/axios.min.js"></script>
+        <script src="https://rawgit.com/coinapi/coinapi-sdk/master/javascript-rest/coinapi_v1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script type="text/javascript">
+
+
+            $('document').ready(function (event) {
+                $('select').select2();
+                // RETURNS EXCHANGE RATE
+                var currentlySelectedCrypto = [];
+                var quoteCoin = [];
+                $("#find-currency").on("load", function (event) {
+
+                    event.preventDefault();
+
+                    var results = quoteCoin.filter(function (coin) {
+                        return currentlySelectedCrypto.includes(coin.asset_id_quote)
+                    });
+
+                    console.log(results);
+
+                    results.forEach(function (coin) {
+                        $("<div>").addClass("crypto crypto-name")
+                            .text(coin.asset_id_quote + "  " + coin.rate)
+                            .appendTo("#display");
+                    });
+
+
+                });
+
+
+
+                loadCrypto('BTC');
+
+
+
+                function loadCrypto(currency) {
+                    var queryURL = "https://rest.coinapi.io/v1/exchangerate/" + currency +
+                        "?apikey=C3F818BB-21EF-425E-B53C-B069172C81CD";
+                    var quoteCoin = [];
+                    const USDbase = [];
+
+                    $.ajax({
+                        url: queryURL,
+                        method: "GET"
+                    }).then(function (response) {
+                        console.log(response);
+                        quoteCoin = response.rates;
+
+                        quoteCoin.forEach(function (coin) {
+                            var displayVal = $("<p>").addClass("crypto crypto-name")
+                                .text(coin.asset_id_quote + "  " + coin.rate)
+
+
+                            var cryptoOption = $("<option>").val(coin.asset_id_quote).text(coin
+                                .asset_id_quote);
+
+                            if (coin.asset_id_quote === 'USD') {
+                                displayVal.prependTo('#display');
+                                cryptoOption.prependTo('[name="multicheckbox[]"]');
+                            } else {
+                                cryptoOption.appendTo('[name="multicheckbox[]"]');
+                            }
+                        })
+                    });
+                }
+
+                function reloadCrypto() {
+                    $('#crypto crypto-name').load(results, function () {
+                        $(this).unwrap();
+                    });
+                }
+
+                loadCrypto(); // This will run on page load
+                setInterval(function () {
+                    loadCrypto('BTC') // this will run after every 5 seconds
+                    console.log("1800 seconds aka 30 min")
+                }, 1800000);
+
+                $('select[name="multicheckbox[]"]').change(function (event) {
+                    event.preventDefault();
+
+                    currentlySelectedCrypto = $(this).val();
+                });
+
+
+            });
+            // -----------------------------------------------------------------------
+        </script>
+    </div>
+</body>
+
+</html>
