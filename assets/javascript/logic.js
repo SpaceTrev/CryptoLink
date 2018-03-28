@@ -41,15 +41,10 @@ btnSignOut.addEventListener('click', e => {
 })
 firebase.auth().onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
-        console.log(firebaseUser.uid);
         btnSignOut.classList.remove('invisible');
         // window.location = 'index.html';
         $("#loggedin").removeClass("d-none")
-        $("#loggedout").empty()
-        database.ref('users/' + firebaseUser.uid).set({
-            ID: firebaseUser.uid,
-            crypt: ""
-        })
+        $("#loggedout").empty();
     } else {
         console.log("not logged in");
     }
@@ -66,20 +61,19 @@ function submitButton() {
     event.preventDefault();
     var submitID = $(this).attr('id');
     console.log(submitID)
-    var amount = $("#" + submitID+"1").val().trim();
+    var amount = $("#" + submitID + "1").val().trim();
     console.log(amount)
 
-    $("#"+ submitID).remove();
-    $("#"+ submitID+"1").remove();
+    $("#" + submitID).remove();
+    $("#" + submitID + "1").remove();
 
-    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput"+submitID).append(`${amount}`);
+    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
 }
- 
-var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
 
 
 
-// var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
+
+var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
 
 
 // https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k
@@ -163,73 +157,48 @@ function createButtons() {
 
     }
 }
-// $(document).on(`click`, `#addPortfolio${nameId}`, function(event){
-//     $("#portfolioCryptoSpace").append(`<table class="table">
-//     <thead class="thead-light">
-//         <tr>
-//             <th scope="col">Crypto</th>
-//             <th scope="col">Price USD:</th>
-//             <th scope="col">Market Cap</th>
-//             <th scope="col">Ammount</th>
-//             <th scope="col">Value</th>
-//             <th scope="col">24 Hour Change</th>
-//         </tr>
-//     </thead>
-//     <tbody>
-//         <tr>
-//             <th scope="row">1</th>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//         </tr>
-//         <tr>
-//             <th scope="row">2</th>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//         </tr>
-//         <tr>
-//             <th scope="row">3</th>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//         </tr>
-//         <tr>
-//             <th scope="row">4</th>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//         </tr>
-//         <tr>
-//             <th scope="row">5</th>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>
-//             <td>${}</td>    
-//         </tr>
-//     </tbody>
-// </table>  
-// </div>`)
 
-//     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
-//         name: coinName
-//     })
-// });
+function createSavedButtons(name) {
+
+    var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + name + "/";
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+        .then(function (response) {
+            var colorPrice;
+            var marketCap = abbrNum(response[0].market_cap_usd, 3);
+            var coinPrice = response[0].price_usd;
+            var nameId = response[0].name;
+            var priceChange = response[0].percent_change_24h;
+            if (priceChange < 0) {
+                colorPrice = "redPrice"
+            } else {
+                colorPrice = "greenPrice"
+            }
+            $("tbody").append(`
+                <tr>
+                   <th scope="row">${nameId}</th>
+                   <td>${coinPrice}</td>
+                   <td>${marketCap}</td>
+                   <td>To be Announced</td>
+                   <td>To be Announced</td>
+                   <td class="${colorPrice}">${priceChange}</td>
+               </tr>
+       
+       `);
+
+        });
+
+}
+
 
 
 function coinToPortfolio(name) {
     var coinName = $(this).attr("data-name");
-    
-     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
         name: coinName
     })
 
@@ -245,21 +214,16 @@ function displaySavedCoin(name) {
             var coinRank = response[0].rank;
             var marketCap = response[0].market_cap_usd;
             var coinPrice = response[0].price_usd;
-            $("#coinPrice").append(`<table style="width:100%">` +
-                `<caption>` + coinName + `</caption>` +
-                `<tr>` +
-                `<th>` + 'Price In USD' + `</th>` +
-                `<th>` + 'Market Cap' + `</th>` +
-
-                `<th>` + 'Ammount' + `</th>` +
-                `</tr>` +
-                `<tr>` +
-                `<td>` + coinPrice + `</td>` +
-                `<td>` + marketCap + `</td>` +
-
-                `<td class='coinAmmountInput${coinName}'><input type='text' name='ammount' id='${coinName}1'> <button class="submitButton btn btn-success float-right" id="${coinName}">submit</button></td>` +
-                `</tr>` +
-                `</table>`);
+            $("tbody").append(`
+            <tr>
+               <th scope="row">${childSnapshot.val().name}</th>
+               <td>${childSnapshot.val().destination}</td>
+               <td>${childSnapshot.val().freq}</td>
+               <td>${moment(nextTrain).format("hh:mm")}</td>
+               <td>${tMinutesTillTrain}</td>
+           </tr>
+   
+   `);
 
         })
 }
@@ -267,7 +231,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
             console.log(snapshot.val().name);
-            displaySavedCoin(snapshot.val().name);
+            createSavedButtons(snapshot.val().name);
 
         });
     }
@@ -282,6 +246,14 @@ $("#addCoin").on("click", function (event) {
     buttonArr.text(coinName);
     $("#coinButtonView").append(buttonArr);
 });
+
+$("#portfolio").on("click", function () {
+    database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
+        console.log(snapshot.val().name);
+        createSavedButtons(snapshot.val().name);
+
+    });
+})
 
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
