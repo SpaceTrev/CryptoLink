@@ -75,7 +75,7 @@ btnSignOut.addEventListener('click', e => {
 
 
 
-var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
+var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
 
 
 // https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k
@@ -121,34 +121,29 @@ function createButtons() {
 
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
-        var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinButtonArray[i] + "/";
+        var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinButtonArray[i] + "&tsyms=USD,EUR";
 
         $.ajax({
             url: queryURL,
             method: "GET"
         })
-            .then(function (response) {
-                var colorPrice;
-                var marketCap = abbrNum(response[0].market_cap_usd, 3);
-                var coinPrice = response[0].price_usd;
-                var nameId = response[0].name;
-                var priceChange = response[0].percent_change_24h;
-                var sumChange = roundToTwo(priceChange*coinPrice/100);
-                var textColor;
-                // var btnAdd;
-                // if (checkIfinPortfolio(nameId)){
-                //     btnAdd = `<button class='btn btn-outline-success ml-2' type='submit' id='addPortfolio' data-name='${nameId}'>Added</button>`
-                // }else{
-                //     btnAdd = `<button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>`
-                // }
-                if (priceChange < 0) {
-                    colorPrice = "redPrice";
-                    textColor = "redColor";
-                } else {
-                    colorPrice = "greenPrice"
-                    textColor = "greenColor"
-                }
-                $("#cryptoSpace").append(`
+            .then(function (data) {
+                for (var name in data.DISPLAY) {
+                    var colorPrice;
+                    var marketCap = data.DISPLAY[name].USD.MKTCAP;
+                    var coinPrice = data.DISPLAY[name].USD.PRICE;
+                    var nameId = name;
+                    var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+                    console.log(data.DISPLAY[name]);
+                    console.log(marketCap);
+                    console.log(coinPrice);
+                    console.log(priceChange);
+                    if (priceChange < 0) {
+                        colorPrice = "redPrice"
+                    } else {
+                        colorPrice = "greenPrice"
+                    }
+                    $("#cryptoSpace").append(`
 
                      <div class="col-md-6 col-lg-3">
                         <div class="card">
@@ -164,7 +159,7 @@ function createButtons() {
                 </div>
             </div>
         `)
-
+                }
             });
 
     }
@@ -175,19 +170,19 @@ function roundToTwo(num) {
 
 function createSavedButtons(name) {
 
-    var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + name + "/";
+    var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + name + "&tsyms=USD,EUR";
 
     $.ajax({
         url: queryURL,
         method: "GET"
     })
-        .then(function (response) {
+        .then(function (data) {
+            for (var name in data.DISPLAY) {
             var colorPrice;
-            var marketCap = abbrNum(response[0].market_cap_usd, 3);
-            var coinPrice = response[0].price_usd;
-            var nameId = response[0].name;
-            var priceChange = response[0].percent_change_24h;
-            var sumChange = roundToTwo(priceChange*coinPrice/100);
+            var marketCap = data.DISPLAY[name].USD.MKTCAP;
+            var coinPrice = data.DISPLAY[name].USD.PRICE;
+            var nameId = name;
+            var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
             if (priceChange < 0) {
                 colorPrice = "redPrice"
             } else {
@@ -204,7 +199,7 @@ function createSavedButtons(name) {
                </tr>
        
        `);
-
+        }
         });
 
 }
@@ -269,4 +264,3 @@ firebase.auth().onAuthStateChanged(function (user) {
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
-
