@@ -17,6 +17,7 @@ const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
 
+
 btnLogin.addEventListener('click', e => {
     e.preventDefault();
     const email = txtEmail.value;
@@ -54,14 +55,32 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     }
 });
 
+
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
 
+function submitButton() {
+    console.log("we r inside")
+    event.preventDefault();
+    var submitID = $(this).attr('id');
+    console.log(submitID)
+    var amount = $("#" + submitID+"1").val().trim();
+    console.log(amount)
 
-var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
+    $("#"+ submitID).remove();
+    $("#"+ submitID+"1").remove();
+
+    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput"+submitID).append(`${amount}`);
+}
+ 
+var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo"];
+
+
+
+// var coinButtonArray = ["bitcoin", "litecoin", "ethereum", "cardano", "stellar", "neo", "decred", "ripple"];
 
 
 // https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k
@@ -101,6 +120,7 @@ function abbrNum(number, decPlaces) {
 
     return number;
 }
+
 
 function createButtons() {
 
@@ -152,7 +172,6 @@ function coinToPortfolio(name) {
     })
 
 }
-
 function displaySavedCoin(name) {
     var coinName = name;
     var queryURL = "https://api.coinmarketcap.com/v1/ticker/" + coinName + "/";
@@ -182,7 +201,6 @@ function displaySavedCoin(name) {
 
         })
 }
-
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
@@ -192,7 +210,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
     }
 });
-
 $("#addCoin").on("click", function (event) {
     event.preventDefault();
     var coinName = $("#coinInput").val().trim();
@@ -207,3 +224,4 @@ $("#addCoin").on("click", function (event) {
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
+
