@@ -142,7 +142,7 @@ function createButtons() {
                     colorPrice = "greenPrice"
                 }
                 $("#cryptoSpace").append(`
-                     <div class="col-md-6 col-lg-3">
+                     <div class="grabCard col-md-6 col-lg-3">
                         <div class="card" data-name=${coinButtonArray[i]}>
                         <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
                         <div class="card-body">
@@ -150,7 +150,7 @@ function createButtons() {
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
                         <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
-                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio">Add to Portfolio</button>
+                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio${nameId}">Add to Portfolio</button>
                     </div>
                 </div>
             </div>
@@ -160,6 +160,66 @@ function createButtons() {
 
     }
 }
+$(document).on(`click`, `#addPortfolio${nameId}`, function(event){
+    $("#portfolioCryptoSpace").append(`<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Crypto</th>
+            <th scope="col">Price USD:</th>
+            <th scope="col">Market Cap</th>
+            <th scope="col">Ammount</th>
+            <th scope="col">Value</th>
+            <th scope="col">24 Hour Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+            <td>${}</td>
+        </tr>
+        <tr>
+            <th scope="row">4</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th scope="row">5</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+</div>`)
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+        name: coinName
+    })
+});
 
 
 function displayCoin(name) {
