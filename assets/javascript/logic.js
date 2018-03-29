@@ -57,24 +57,6 @@ btnSignOut.addEventListener('click', e => {
     }
 });
 
-
-// function submitButton() {
-//     console.log("we r inside")
-//     event.preventDefault();
-//     var submitID = $(this).attr('id');
-//     console.log(submitID)
-//     var amount = $("#" + submitID + "1").val().trim();
-//     console.log(amount)
-
-//     $("#" + submitID).remove();
-//     $("#" + submitID + "1").remove();
-
-//     $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
-// }
-
-
-
-
 var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
 
 
@@ -129,19 +111,24 @@ function createButtons() {
         })
             .then(function (data) {
                 for (var name in data.DISPLAY) {
+                    console.log(data)
                     var colorPrice;
+                    var textColor;
                     var marketCap = data.DISPLAY[name].USD.MKTCAP;
-                    var coinPrice = data.DISPLAY[name].USD.PRICE;
+                    var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
+                    var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
                     var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
                     console.log(priceChange);
-                    if (priceChange < 0) {
-                        colorPrice = "redPrice"
+                    if (priceChangePct < 0) {
+                        colorPrice = "redPrice";
+                        textColor = "redColor";
                     } else {
-                        colorPrice = "greenPrice"
+                        colorPrice = "greenPrice";
+                        textColor = "greenColor";
                     }
                     $("#cryptoSpace").append(`
 
@@ -152,7 +139,7 @@ function createButtons() {
                         <h5 class="card-title">${nameId}</h5>
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
-                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span>  <span class="${textColor}">${sumChange}$</span></p>
+                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChangePct}% </span>  <span class="${textColor}">${priceChange}$</span></p>
 
                         <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
                     </div>
@@ -177,16 +164,19 @@ function createSavedButtons(name) {
         method: "GET"
     })
         .then(function (data) {
-            for (var name in data.DISPLAY) {
             var colorPrice;
+            var textColor;
             var marketCap = data.DISPLAY[name].USD.MKTCAP;
             var coinPrice = data.DISPLAY[name].USD.PRICE;
             var nameId = name;
+            var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
             var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
-            if (priceChange < 0) {
-                colorPrice = "redPrice"
+            if (priceChangePct < 0) {
+                colorPrice = "redPrice";
+                textColor = "redColor";
             } else {
                 colorPrice = "greenPrice"
+                textColor = "greenColor";
             }
             $("tbody").append(`
                 <tr>
@@ -195,11 +185,10 @@ function createSavedButtons(name) {
                    <td>${marketCap}</td>
                    <td>To be Announced</td>
                    <td>To be Announced</td>
-                   <td><span class="${colorPrice}">${priceChange}%</span> <span class="${colorPrice}">${sumChange}$</span></td>
+                   <td><span class="${colorPrice}">${priceChangePct}%</span> <span class="${textColor}">${priceChange}$</span></td>
                </tr>
        
        `);
-        }
         });
 
 }
@@ -242,25 +231,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
     }
 });
-// $("#addCoin").on("click", function (event) {
-//     event.preventDefault();
-//     var coinName = $("#coinInput").val().trim();
-//     coinButtonArray.push(coinName);
-//     var buttonArr = $("<button class='btn btn-info'>");
-//     buttonArr.addClass("coinButtons");
-//     buttonArr.attr("data-name", coinName);
-//     buttonArr.text(coinName);
-//     $("#coinButtonView").append(buttonArr);
-// });
 
-// $("#portfolio").on("click", function () {
-//     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
-//         console.log(snapshot.val().name);
-//         createSavedButtons(snapshot.val().name);
-
-//     });
-// })
-
-// $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
