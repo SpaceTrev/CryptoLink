@@ -10,13 +10,11 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
-
 
 btnLogin.addEventListener('click', e => {
     e.preventDefault();
@@ -50,12 +48,12 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     }
 });
 
-
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
+
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -63,64 +61,18 @@ function submitButton() {
     console.log(submitID)
     var amount = $("#" + submitID + "1").val().trim();
     console.log(amount)
-
     $("#" + submitID).remove();
     $("#" + submitID + "1").remove();
-
     $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
 }
 
-
-
-
 var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
-
-
-// https://stackoverflow.com/questions/2685911/is-there-a-way-to-round-numbers-into-a-reader-friendly-format-e-g-1-1k
-
-function abbrNum(number, decPlaces) {
-    // 2 decimal places => 100, 3 => 1000, etc
-    decPlaces = Math.pow(10, decPlaces);
-
-    // Enumerate number abbreviations
-    var abbrev = ["K", "M", "B", "T"];
-
-    // Go through the array backwards, so we do the largest first
-    for (var i = abbrev.length - 1; i >= 0; i--) {
-
-        // Convert array index to "1000", "1000000", etc
-        var size = Math.pow(10, (i + 1) * 3);
-
-        // If the number is bigger or equal do the abbreviation
-        if (size <= number) {
-            // Here, we multiply by decPlaces, round, and then divide by decPlaces.
-            // This gives us nice rounding to a particular decimal place.
-            number = Math.round(number * decPlaces / size) / decPlaces;
-
-            // Handle special case where we round up to the next abbreviation
-            if ((number == 1000) && (i < abbrev.length - 1)) {
-                number = 1;
-                i++;
-            }
-
-            // Add the letter for the abbreviation
-            number += abbrev[i];
-
-            // We are done... stop
-            break;
-        }
-    }
-
-    return number;
-}
-
 
 function createButtons() {
 
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
         var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinButtonArray[i] + "&tsyms=USD,EUR";
-
         $.ajax({
             url: queryURL,
             method: "GET"
@@ -131,7 +83,7 @@ function createButtons() {
                     var marketCap = data.DISPLAY[name].USD.MKTCAP;
                     var coinPrice = data.DISPLAY[name].USD.PRICE;
                     var nameId = name;
-                    var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+                    var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
@@ -158,7 +110,6 @@ function createButtons() {
         `)
                 }
             });
-
     }
 }
 
@@ -172,33 +123,32 @@ function createSavedButtons(name) {
     })
         .then(function (data) {
             for (var name in data.DISPLAY) {
-            var colorPrice;
-            var marketCap = data.DISPLAY[name].USD.MKTCAP;
-            var coinPrice = data.DISPLAY[name].USD.PRICE;
-            var nameId = name;
-            var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
-            if (priceChange < 0) {
-                colorPrice = "redPrice"
-            } else {
-                colorPrice = "greenPrice"
-            }
-            $("tbody").append(`
+                var colorPrice;
+                var marketCap = data.DISPLAY[name].USD.MKTCAP;
+                var coinPrice = data.DISPLAY[name].USD.PRICE;
+                var nameId = name;
+                var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
+                console.log(priceChange);
+                if (priceChange < 0) {
+                    colorPrice = "redPrice"
+                } else {
+                    colorPrice = "greenPrice"
+                }
+                $("tbody").append(`
                 <tr>
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
-                   <td><input><form>Empty</form><button>Submit</button></input></td>
+                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
                    <td>To be Announced</td>
                    <td class="${colorPrice}">${priceChange}</td>
                </tr>
        
        `);
-        }
+            }
         });
 
 }
-
-
 
 function coinToPortfolio(name) {
     var coinName = $(this).attr("data-name");
@@ -222,10 +172,10 @@ function displaySavedCoin(name) {
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
-                   <td><input><form>Empty</form><button>Submit</button></input></td>
+                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
                    <td>To be Announced</td>
                    <td class="${colorPrice}">${priceChange}</td>
-               </tr>
+     </tr>
    
    `);
 
