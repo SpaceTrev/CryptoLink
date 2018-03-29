@@ -10,13 +10,11 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
-
 
 btnLogin.addEventListener('click', e => {
     e.preventDefault();
@@ -50,7 +48,6 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     }
 });
 
-
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
@@ -64,7 +61,6 @@ function createButtons() {
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
         var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinButtonArray[i] + "&tsyms=USD,EUR";
-
         $.ajax({
             url: queryURL,
             method: "GET"
@@ -78,7 +74,7 @@ function createButtons() {
                     var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
                     var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
-                    var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+                    var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
@@ -108,7 +104,6 @@ function createButtons() {
         `)
                 }
             });
-
     }
 }
 function roundToTwo(num) {    
@@ -143,14 +138,13 @@ function createSavedButtons(name) {
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
-                   <td>To be Announced</td>
+                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
                    <td>To be Announced</td>
                    <td><span class="${colorPrice}">${priceChangePct}%</span> <span class="${textColor}">${priceChange}$</span></td>
                </tr>
        
        `);
-        });
-
+     })
 }
 
 function checkIfinPortfolio(name){
