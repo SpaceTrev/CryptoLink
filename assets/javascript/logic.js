@@ -187,7 +187,7 @@ function createSavedButtons(name) {
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
-                   <td>To be Announced</td>
+                   <td><input><form>Empty</form><button>Submit</button></input></td>
                    <td>To be Announced</td>
                    <td class="${colorPrice}">${priceChange}</td>
                </tr>
@@ -218,13 +218,14 @@ function displaySavedCoin(name) {
             var marketCap = data.DISPLAY[name].USD.MKTCAP;
             var coinPrice = data.DISPLAY[name].USD.PRICE;
             $("tbody").append(`
-            <tr>
-               <th scope="row">${childSnapshot.val().name}</th>
-               <td>${childSnapshot.val().destination}</td>
-               <td>${childSnapshot.val().freq}</td>
-               <td>${moment(nextTrain).format("hh:mm")}</td>
-               <td>${tMinutesTillTrain}</td>
-           </tr>
+     <tr>
+                   <th scope="row">${nameId}</th>
+                   <td>${coinPrice}</td>
+                   <td>${marketCap}</td>
+                   <td><input><form>Empty</form><button>Submit</button></input></td>
+                   <td>To be Announced</td>
+                   <td class="${colorPrice}">${priceChange}</td>
+               </tr>
    
    `);
 
