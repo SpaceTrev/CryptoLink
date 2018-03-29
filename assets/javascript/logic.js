@@ -75,7 +75,7 @@ function createButtons() {
                     var nameId = name;
                     var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
                     var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
-                    console.log(data.DISPLAY[name]);
+                    // console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
                     console.log(priceChange);
