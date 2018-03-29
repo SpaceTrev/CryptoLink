@@ -54,18 +54,6 @@ btnSignOut.addEventListener('click', e => {
     }
 });
 
-function submitButton() {
-    console.log("we r inside")
-    event.preventDefault();
-    var submitID = $(this).attr('id');
-    console.log(submitID)
-    var amount = $("#" + submitID + "1").val().trim();
-    console.log(amount)
-    $("#" + submitID).remove();
-    $("#" + submitID + "1").remove();
-    $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
-}
-
 var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
 
 function createButtons() {
@@ -79,19 +67,24 @@ function createButtons() {
         })
             .then(function (data) {
                 for (var name in data.DISPLAY) {
+                    console.log(data)
                     var colorPrice;
+                    var textColor;
                     var marketCap = data.DISPLAY[name].USD.MKTCAP;
-                    var coinPrice = data.DISPLAY[name].USD.PRICE;
+                    var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
+                    var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
                     var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
                     console.log(priceChange);
-                  if (priceChange < 0) {
-                        colorPrice = "redPrice"
+                    if (priceChangePct < 0) {
+                        colorPrice = "redPrice";
+                        textColor = "redColor";
                     } else {
-                        colorPrice = "greenPrice"
+                        colorPrice = "greenPrice";
+                        textColor = "greenColor";
                     }
                     $("#cryptoSpace").append(`
 
@@ -102,7 +95,8 @@ function createButtons() {
                         <h5 class="card-title">${nameId}</h5>
                         <p class="card-text">Price: ${coinPrice}$</p>
                         <p class="card-text">MarketCap: ${marketCap}$</p>
-                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChange} %</span></p>
+                        <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChangePct}% </span>  <span class="${textColor}">${priceChange}$</span></p>
+
                         <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
                     </div>
                 </div>
@@ -111,6 +105,9 @@ function createButtons() {
                 }
             });
     }
+}
+function roundToTwo(num) {    
+    return +(Math.round(num + "e+2")  + "e-2");
 }
 
 function createSavedButtons(name) {
@@ -122,64 +119,63 @@ function createSavedButtons(name) {
         method: "GET"
     })
         .then(function (data) {
-            for (var name in data.DISPLAY) {
-                var colorPrice;
-                var marketCap = data.DISPLAY[name].USD.MKTCAP;
-                var coinPrice = data.DISPLAY[name].USD.PRICE;
-                var nameId = name;
-                var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
-                console.log(priceChange);
-                if (priceChange < 0) {
-                    colorPrice = "redPrice"
-                } else {
-                    colorPrice = "greenPrice"
-                }
-                $("tbody").append(`
+            var colorPrice;
+            var textColor;
+            var marketCap = data.DISPLAY[name].USD.MKTCAP;
+            var coinPrice = data.DISPLAY[name].USD.PRICE;
+            var nameId = name;
+            var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
+            var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+            if (priceChangePct < 0) {
+                colorPrice = "redPrice";
+                textColor = "redColor";
+            } else {
+                colorPrice = "greenPrice"
+                textColor = "greenColor";
+            }
+            $("tbody").append(`
                 <tr>
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
                    <td><input> <button class='btn btn-success'>Submit</button></input></td>
                    <td>To be Announced</td>
-                   <td class="${colorPrice}">${priceChange}</td>
+                   <td><span class="${colorPrice}">${priceChangePct}%</span> <span class="${textColor}">${priceChange}$</span></td>
                </tr>
        
        `);
-            }
-        });
-
+     })
 }
+
+
+function checkIfinPortfolio(name){
+    var coinName = name;
+    var nameArray = [];
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
+        console.log(snapshot.val().name);
+        nameArray.push(snapshot.val().name);
+    });
+    if (nameArray.indexOf(coinName)>0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 function coinToPortfolio(name) {
     var coinName = $(this).attr("data-name");
+    var nameArray = [];
+    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
+        console.log(snapshot.val().name);
+        nameArray.push(snapshot.val().name);
 
-    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
-        name: coinName
-    })
-}
-function displaySavedCoin(name) {
-    var coinName = name;
-    var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinName + "&tsyms=USD,EUR";
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-        .then(function (data) {
-            var marketCap = data.DISPLAY[name].USD.MKTCAP;
-            var coinPrice = data.DISPLAY[name].USD.PRICE;
-            $("tbody").append(`
-     <tr>
-                   <th scope="row">${nameId}</th>
-                   <td>${coinPrice}</td>
-                   <td>${marketCap}</td>
-                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
-                   <td>To be Announced</td>
-                   <td class="${colorPrice}">${priceChange}</td>
-     </tr>
-   
-   `);
-
+    });
+    if (nameArray.indexOf(coinName)<0){
+        database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
+            name: coinName
         })
+    }
 }
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -190,25 +186,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
     }
 });
-$("#addCoin").on("click", function (event) {
-    event.preventDefault();
-    var coinName = $("#coinInput").val().trim();
-    coinButtonArray.push(coinName);
-    var buttonArr = $("<button class='btn btn-info'>");
-    buttonArr.addClass("coinButtons");
-    buttonArr.attr("data-name", coinName);
-    buttonArr.text(coinName);
-    $("#coinButtonView").append(buttonArr);
-});
 
-$("#portfolio").on("click", function () {
-    database.ref(`users/${user.uid}/cryptos`).on('child_added', function (snapshot) {
-        console.log(snapshot.val().name);
-        createSavedButtons(snapshot.val().name);
-
-    });
-})
-
-// $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
 createButtons();
