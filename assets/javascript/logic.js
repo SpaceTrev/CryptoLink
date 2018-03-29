@@ -147,6 +147,7 @@ function createSavedButtons(name) {
      })
 }
 
+
 function checkIfinPortfolio(name){
     var coinName = name;
     var nameArray = [];
