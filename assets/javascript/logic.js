@@ -10,13 +10,11 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-
 const txtEmail = document.getElementById("user");
 const txtPassword = document.getElementById("pass");
 const btnLogin = document.getElementById("login");
 const btnSignUp = document.getElementById('signup');
 const btnSignOut = document.getElementById('logout');
-
 
 btnLogin.addEventListener('click', e => {
     e.preventDefault();
@@ -50,12 +48,12 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     }
 });
 
-
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut(); {
         window.location = 'index.html';
     }
 });
+
 function submitButton() {
     console.log("we r inside")
     event.preventDefault();
@@ -63,13 +61,14 @@ function submitButton() {
     console.log(submitID)
     var amount = $("#" + submitID + "1").val().trim();
     console.log(amount)
-
     $("#" + submitID).remove();
     $("#" + submitID + "1").remove();
-
     $("#coinPrice > table:nth-child(1) > tbody > tr:nth-child(2) > td.coinAmmountInput" + submitID).append(`${amount}`);
 }
 
+<<<<<<< HEAD
+var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
+=======
 
 
 
@@ -114,13 +113,17 @@ function abbrNum(number, decPlaces) {
     return number;
 }
 
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
 
 function createButtons() {
 
     $("#coinPrice").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
         var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinButtonArray[i] + "&tsyms=USD,EUR";
+<<<<<<< HEAD
+=======
 
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
         $.ajax({
             url: queryURL,
             method: "GET"
@@ -131,7 +134,11 @@ function createButtons() {
                     var marketCap = data.DISPLAY[name].USD.MKTCAP;
                     var coinPrice = data.DISPLAY[name].USD.PRICE;
                     var nameId = name;
+<<<<<<< HEAD
+                    var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
+=======
                     var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
@@ -158,7 +165,6 @@ function createButtons() {
         `)
                 }
             });
-
     }
 }
 
@@ -172,6 +178,20 @@ function createSavedButtons(name) {
     })
         .then(function (data) {
             for (var name in data.DISPLAY) {
+<<<<<<< HEAD
+                var colorPrice;
+                var marketCap = data.DISPLAY[name].USD.MKTCAP;
+                var coinPrice = data.DISPLAY[name].USD.PRICE;
+                var nameId = name;
+                var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
+                console.log(priceChange);
+                if (priceChange < 0) {
+                    colorPrice = "redPrice"
+                } else {
+                    colorPrice = "greenPrice"
+                }
+                $("tbody").append(`
+=======
             var colorPrice;
             var marketCap = data.DISPLAY[name].USD.MKTCAP;
             var coinPrice = data.DISPLAY[name].USD.PRICE;
@@ -183,22 +203,25 @@ function createSavedButtons(name) {
                 colorPrice = "greenPrice"
             }
             $("tbody").append(`
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
                 <tr>
                    <th scope="row">${nameId}</th>
                    <td>${coinPrice}</td>
                    <td>${marketCap}</td>
-                   <td>To be Announced</td>
+                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
                    <td>To be Announced</td>
                    <td class="${colorPrice}">${priceChange}</td>
                </tr>
        
        `);
+<<<<<<< HEAD
+            }
+=======
         }
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
         });
 
 }
-
-
 
 function coinToPortfolio(name) {
     var coinName = $(this).attr("data-name");
@@ -218,13 +241,14 @@ function displaySavedCoin(name) {
             var marketCap = data.DISPLAY[name].USD.MKTCAP;
             var coinPrice = data.DISPLAY[name].USD.PRICE;
             $("tbody").append(`
-            <tr>
-               <th scope="row">${childSnapshot.val().name}</th>
-               <td>${childSnapshot.val().destination}</td>
-               <td>${childSnapshot.val().freq}</td>
-               <td>${moment(nextTrain).format("hh:mm")}</td>
-               <td>${tMinutesTillTrain}</td>
-           </tr>
+     <tr>
+                   <th scope="row">${nameId}</th>
+                   <td>${coinPrice}</td>
+                   <td>${marketCap}</td>
+                   <td><input> <button class='btn btn-success'>Submit</button></input></td>
+                   <td>To be Announced</td>
+                   <td class="${colorPrice}">${priceChange}</td>
+     </tr>
    
    `);
 
@@ -260,4 +284,8 @@ $("#portfolio").on("click", function () {
 
 // $(document).on("click", ".coinButtons", displayCoin);
 $(document).on("click", "#addPortfolio", coinToPortfolio);
+<<<<<<< HEAD
 createButtons();
+=======
+createButtons();
+>>>>>>> 02aa8025998e47a2222a7c3e73725e068c6d1057
