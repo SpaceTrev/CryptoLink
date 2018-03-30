@@ -175,6 +175,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
 
+
 function checkIfinPortfolio(name){
     return nameArray.includes(name);
 }
