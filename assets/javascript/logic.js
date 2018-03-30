@@ -77,6 +77,7 @@ function createButtons() {
                     var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
                     var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
+<<<<<<< HEAD
                     var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
                     var showBtn;
                     // console.log(cryptos);
@@ -86,6 +87,10 @@ function createButtons() {
                         showBtn = `<button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>`
                     }
                     console.log(data.DISPLAY[name]);
+=======
+                    var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
+                    // console.log(data.DISPLAY[name]);
+>>>>>>> master
                     console.log(marketCap);
                     console.log(coinPrice);
                     console.log(priceChange);
