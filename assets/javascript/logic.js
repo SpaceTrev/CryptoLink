@@ -37,6 +37,8 @@ btnSignUp.addEventListener('click', e => {
 btnSignOut.addEventListener('click', e => {
     firebase.auth().signOut();
 })
+
+
 firebase.auth().onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
         btnSignOut.classList.remove('invisible');
@@ -59,6 +61,7 @@ var coinButtonArray = ["BTC", "LTC", "ETH", "XRP", "XLM", "XRB", "NEO", "BCH"];
 function createButtons() {
 
     $("#coinPrice").empty();
+    $("#cryptoSpace").empty();
     for (var i = 0; i < coinButtonArray.length; i++) {
         var queryURL = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + coinButtonArray[i] + "&tsyms=USD,EUR";
         $.ajax({
@@ -74,7 +77,14 @@ function createButtons() {
                     var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
                     var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
-                    var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
+                    var priceChange = data.DISPLAY[name].USD.CHANGE24HOUR;
+                    var showBtn;
+                    // console.log(cryptos);
+                    if (checkIfinPortfolio(nameId)){
+                        showBtn = `<button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>In Portfolio</button>`
+                    }else{
+                        showBtn = `<button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>`
+                    }
                     console.log(data.DISPLAY[name]);
                     console.log(marketCap);
                     console.log(coinPrice);
@@ -97,7 +107,7 @@ function createButtons() {
                         <p class="card-text">MarketCap: ${marketCap}$</p>
                         <p class="card-text">24hr change:<span class="${colorPrice}"> ${priceChangePct}% </span>  <span class="${textColor}">${priceChange}$</span></p>
 
-                        <button class="btn btn-outline-success ml-2" type="submit" id="addPortfolio" data-name='${nameId}'>Add to Portfolio</button>
+                       ${showBtn}
                     </div>
                 </div>
             </div>
@@ -119,6 +129,7 @@ function createSavedButtons(name) {
         method: "GET"
     })
         .then(function (data) {
+            
             var colorPrice;
             var textColor;
             var marketCap = data.DISPLAY[name].USD.MKTCAP;
@@ -146,25 +157,38 @@ function createSavedButtons(name) {
        `);
      })
 }
+var nameArray = [];
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        database.ref(`users/${user.uid}/cryptos`).on('value', function (snapshot) {
+            var cryptos = snapshot.val();
+            for (var key in cryptos) {
+                var crypto = cryptos[key];
+                nameArray.push(crypto.name);
+            }
+            createButtons();
+        });
+    } else {
+        createButtons();
+    }
+})
+
+
 
 function checkIfinPortfolio(name){
-    var coinName = name;
-    var nameArray = [];
-    database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
-        console.log(snapshot.val().name);
-        nameArray.push(snapshot.val().name);
-    });
-    if (nameArray.indexOf(coinName)>0){
-        return true;
-    }else{
-        return false;
-    }
+    return nameArray.includes(name);
+}
+
+function cryptoInPortfolio(){
+    return nameArray;
 }
 
 
 function coinToPortfolio(name) {
+    $(this).text("In Portfolio");
     var coinName = $(this).attr("data-name");
     var nameArray = [];
+    console.log(firebase.auth().currentUser.uid);
     database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).on('child_added', function (snapshot) {
         console.log(snapshot.val().name);
         nameArray.push(snapshot.val().name);
@@ -187,4 +211,3 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 $(document).on("click", "#addPortfolio", coinToPortfolio);
-createButtons();
