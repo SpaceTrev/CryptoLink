@@ -73,6 +73,7 @@ function createButtons() {
                     var marketCap = data.DISPLAY[name].USD.MKTCAP;
                     var coinPrice = roundToTwo(data.RAW[name].USD.PRICE);
                     var nameId = name;
+                    var chart = chartGeneration(nameId);
                     var priceChangePct = data.DISPLAY[name].USD.CHANGEPCT24HOUR;
                     var priceChange = data.DISPLAY[name].USD.CHANGEPCTDAY;
                     // console.log(data.DISPLAY[name]);
@@ -90,7 +91,7 @@ function createButtons() {
 
                      <div class="col-md-6 col-lg-3">
                         <div class="card">
-                        <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
+                        <div class="ct-chart" id="${nameId}"></div>
                         <div class="card-body">
                         <h5 class="card-title">${nameId}</h5>
                         <p class="card-text">Price: ${coinPrice}$</p>
@@ -104,15 +105,76 @@ function createButtons() {
         `)
                 }
             });
+        }
     }
-}
-<<<<<<< HEAD
-function roundToTwo(num) {    
-    return +(Math.round(num + "e+2")  + "e-2");
-=======
+function chartGeneration(name) {
+    var chartQueryURL = "https://min-api.cryptocompare.com/data/histoday?fsym="+name+"&tsym=USD&limit=10&aggregate=3&e=CCCAGG";
+    var timeses;
+        $.ajax({
+            url: chartQueryURL,
+            method: "GET"
+        }).then(function (data) {
+            var dateString = moment(timeConvert)._d;
+            var iterationObject = Object.keys(data.Data)
+            var time = data.Data[0].time;
+            var timeConvert = time.toString();
+            console.log(data.Data);
+            for (var i = 0; i < iterationObject.length; i++) {
+                timeses = data.Data[i].time;
+                var convertedAf = moment.unix(timeses)._d;
+                var highPrices = data.Data[i].high;
+                var closePrices = data.Data[i].close;
+                var lowPrices = data.Data[i].low;
+                var volumeFrom = data.Data[i].volumefrom;
+                var volumeTo = data.Data[i].volumeto;
+                // console.log(highPrices, "highPrices");
+                // console.log(lowPrices, "lowPrices");
+                // console.log(closePrices, "closePrices");
+                // console.log(volumeFrom, "volumeFrom");
+                // console.log(volumeTo, "volumeTo");
+                // console.log(convertedAf, "times");
+            }
+            var chartData = {
+                // A labels array that can contain any sort of values
+                labels: [],
+                // Our series array that contains series objects or in this case series data arrays
+                series: [
+                    [data.Data[0].high, data.Data[1].high, data.Data[2].high,
+                    data.Data[3].high, data.Data[4].high, data.Data[5].high,
+                    data.Data[6].high, data.Data[7].high, data.Data[8].high,
+                    data.Data[9].high, data.Data[10].high]
+                ],
+                height: 100,
+                width: 240
+
+            };
+            var removeLabels = {
+
+                showLabel: false,
+                axisX: {
+                    showLabel: false,
+                    showGrid: false,
+
+                },
+                axisY: {
+                    showLabel: false,
+                    showGrid: false,
+
+                }, 
+                height: 100,
+                width: 240,
+            }
+
+            // Create a new line chart object where as first parameter we pass in a selector
+            // that is resolving to our chart container element. The Second parameter
+            // is the actual data object.
+            return new Chartist.Line(`#${name}`, chartData, removeLabels);
+            console.log(removeLabels);
+        })
+    }
+
 function roundToTwo(num) {
     return +(Math.round(num + "e+2") + "e-2");
->>>>>>> new branch first commit
 }
 
 function createSavedButtons(name) {

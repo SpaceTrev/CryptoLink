@@ -36,3 +36,10 @@ body {
 .redColor{
     color: red;
 }
+.ct-series-a .ct-line {
+    stroke: green;
+}
+
+.ct-series-a .ct-point {
+    stroke: green;
+}
