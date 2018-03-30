@@ -106,8 +106,13 @@ function createButtons() {
             });
     }
 }
+<<<<<<< HEAD
 function roundToTwo(num) {    
     return +(Math.round(num + "e+2")  + "e-2");
+=======
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2") + "e-2");
+>>>>>>> new branch first commit
 }
 
 function createSavedButtons(name) {
@@ -155,9 +160,9 @@ function checkIfinPortfolio(name){
         console.log(snapshot.val().name);
         nameArray.push(snapshot.val().name);
     });
-    if (nameArray.indexOf(coinName)>0){
+    if (nameArray.indexOf(coinName) > 0) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
@@ -171,7 +176,7 @@ function coinToPortfolio(name) {
         nameArray.push(snapshot.val().name);
 
     });
-    if (nameArray.indexOf(coinName)<0){
+    if (nameArray.indexOf(coinName) < 0) {
         database.ref(`users/${firebase.auth().currentUser.uid}/cryptos`).push({
             name: coinName
         })
